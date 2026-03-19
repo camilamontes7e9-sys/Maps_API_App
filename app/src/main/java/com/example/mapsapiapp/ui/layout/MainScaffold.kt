@@ -16,7 +16,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+
 import kotlinx.coroutines.launch
+import com.example.mapsapiapp.ui.components.DrawerMenu
+import com.example.mapsapiapp.ui.navigation.Routes
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +39,7 @@ fun MainScaffold(navController: NavController, content: @Composable () -> Unit) 
                 currentRoute = currentRoute,
                 onNavigate = { destination ->
                     navController.navigate(destination) {
-                        popUpTo(Destination.Home) { inclusive = false } //esborra l'historial de pantalles
+                        popUpTo(Routes.MapsScreen) { inclusive = false } //esborra l'historial de pantalles
                         launchSingleTop = true
                     }
                     scope.launch { drawerState.close() } //després d'anar a la pantalla tanca el menú
@@ -56,4 +60,5 @@ fun MainScaffold(navController: NavController, content: @Composable () -> Unit) 
         }
     }
 }
+
 
