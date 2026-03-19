@@ -1,4 +1,4 @@
-package com.example.mapsapiapp.navigation
+package com.example.mapsapiapp.ui.navigation
 
 sealed class Routes(val route: String) {
     object MapsScreen: Routes("MapsScreen")

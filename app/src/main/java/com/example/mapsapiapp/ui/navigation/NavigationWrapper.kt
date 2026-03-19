@@ -1,13 +1,13 @@
-package com.example.mapsapiapp.navigation
+package com.example.mapsapiapp.ui.navigation
 
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.mapsapiapp.view.MarkerListScreen
-import com.example.mapsapiapp.view.MarkerScreen
-import com.example.mapsapiapp.view.MapsScreen
+import com.example.mapsapiapp.ui.screens.MarkerListScreen
+import com.example.mapsapiapp.ui.screens.MarkerScreen
+import com.example.mapsapiapp.ui.screens.MapsScreen
 import com.example.mapsapiapp.viewModel.MapsViewModel
 
 @Composable

@@ -1,4 +1,4 @@
-package com.example.mapsapiapp.view
+package com.example.mapsapiapp.ui.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
