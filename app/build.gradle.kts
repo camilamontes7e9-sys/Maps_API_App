@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -77,6 +78,15 @@ dependencies {
     implementation(libs.androidx.compose.material3.window.size.class1)
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
 
+    //SUPABASE
+    val supabaseVersion = "2.2.3"
+    implementation(libs.postgrest.kt)
+    implementation(libs.ktor.client.android)
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:${supabaseVersion}")
+    implementation("io.ktor:ktor-client-android:2.3.8")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
 
 }
 
