@@ -1,21 +1,24 @@
 package com.example.mapsapiapp.repository
 
+import com.example.mapsapiapp.model.Task
+import com.example.mapsapiapp.network.SupabaseClient
+import io.github.jan.supabase.postgrest.postgrest
+
 class RepositoryTask {
-    // Apuntem directament a la taula "tasques"
-    private val taula = SupabaseClient.client.postgrest["tasques"]
+    private val table = SupabaseClient.client.postgrest["Task"]
 
-    suspend fun afegirTasca(titol: String) {
-        val novaTasca = Tasca(titol = titol)
-        taula.insert(novaTasca)
+    suspend fun addTask(titleP: String, latP: Float, longP: Float, completed: Boolean, descriptionP: String) {
+        val newTask = Task(title = titleP, lat = latP, long = longP, complete = completed, description = descriptionP)
+        table.insert(newTask)
     }
 
-    suspend fun obtenirTasques(): List<Tasca> {
-        return taula.select().decodeList<Tasca>()
+    suspend fun obtainTasks(): List<Task> {
+        return table.select().decodeList<Task>()
     }
 
-    suspend fun actualitzarEstatTasca(id: String, completada: Boolean) {
-        taula.update({
-            set("completada", completada)
+    suspend fun updateTaskState(id: Int, completed: Boolean) {
+        table.update({
+            set("completed", completed)
         }) {
             filter {
                 eq("id", id)
@@ -23,8 +26,8 @@ class RepositoryTask {
         }
     }
 
-    suspend fun esborrarTasca(id: String) {
-        taula.delete {
+    suspend fun deleteTask(id: Int) {
+        table.delete {
             filter {
                 eq("id", id)
             }

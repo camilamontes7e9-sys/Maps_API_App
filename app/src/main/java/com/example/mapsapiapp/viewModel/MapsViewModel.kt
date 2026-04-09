@@ -1,49 +1,74 @@
 package com.example.mapsapiapp.viewModel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mapsapiapp.model.Task
+import com.example.mapsapiapp.repository.RepositoryTask
+import com.example.mapsapiapp.ui.permissions.MapPermissionState
+import com.google.androidbrowserhelper.trusted.PermissionStatus
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class MapsViewModel: ViewModel() {
-    private val repository = TascaRepository()
 
-    private val _tasques = MutableStateFlow<List<Tasca>>(emptyList())
-    val tasques: StateFlow<List<Tasca>> = _tasques
+    //Manage tasks
+    private val repository = RepositoryTask()
+
+    private val _tasks = MutableStateFlow<List<Task>>(emptyList())
+    val tasks: StateFlow<List<Task>> = _tasks
 
     init {
-        carregarTasques()
+        loadTasks()
     }
 
-    private fun carregarTasques() {
+    private fun loadTasks() {
         viewModelScope.launch {
             try {
-                _tasques.value = repository.obtenirTasques()
+                _tasks.value = repository.obtainTasks()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
-    fun afegirTasca(titol: String) {
+    fun addTask(title: String, lat: Float, long: Float, complete: Boolean, description: String) {
         viewModelScope.launch {
-            repository.afegirTasca(titol)
-            carregarTasques()
+            repository.addTask(titleP = title, latP = lat, longP = long, completed = complete, descriptionP = description)
+            loadTasks()
         }
     }
 
-    fun canviarEstatTasca(tasca: Tasca) {
+    fun updateTaskState(task: Task) {
         viewModelScope.launch {
-            tasca.id?.let { id ->
-                repository.actualitzarEstatTasca(id, !tasca.completada)
-                carregarTasques()
+            task.id?.let { id ->
+                repository.updateTaskState(id, !task.complete)
+                loadTasks()
             }
         }
     }
 
-    fun esborrarTasca(tasca: Tasca) {
+    fun deleteTask(task: Task) {
         viewModelScope.launch {
-            tasca.id?.let { id ->
-                repository.esborrarTasca(id)
-                carregarTasques()
+            task.id?.let { id ->
+                repository.deleteTask(id)
+                loadTasks()
             }
+        }
+    }
+
+    //Manage permisions
+    private val _uiState =
+        mutableStateOf<MapPermissionState>(MapPermissionState.Requesting)
+    val uiState: State<MapPermissionState> = _uiState
+
+    fun onPermissionResult(status: PermissionStatus) {
+        _uiState.value = when (status) {
+            PermissionStatus.Granted -> MapPermissionState.NavigateToMap
+            PermissionStatus.Denied -> MapPermissionState.ShowDenied
+            PermissionStatus.PermanentlyDenied -> MapPermissionState.ShowPermanentlyDenied
+            PermissionStatus.Unknown -> MapPermissionState.Requesting
         }
     }
 }
