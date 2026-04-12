@@ -1,4 +1,4 @@
-package com.example.mapsapiapp.ui.permissions
+package com.example.mapsapiapp.ui.map
 
 sealed class MapPermissionState {
     object Requesting : MapPermissionState()

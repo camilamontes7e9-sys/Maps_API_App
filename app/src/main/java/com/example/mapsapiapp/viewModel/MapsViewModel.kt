@@ -1,12 +1,14 @@
 package com.example.mapsapiapp.viewModel
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mapsapiapp.core.permissions.PermissionStatus
 import com.example.mapsapiapp.model.Task
 import com.example.mapsapiapp.repository.RepositoryTask
-import com.example.mapsapiapp.ui.permissions.MapPermissionState
-import com.google.androidbrowserhelper.trusted.PermissionStatus
+import com.example.mapsapiapp.ui.map.MapPermissionState
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -57,8 +59,7 @@ class MapsViewModel: ViewModel() {
             }
         }
     }
-
-    //Manage permisions
+    //Permisions
     private val _uiState =
         mutableStateOf<MapPermissionState>(MapPermissionState.Requesting)
     val uiState: State<MapPermissionState> = _uiState
@@ -71,4 +72,5 @@ class MapsViewModel: ViewModel() {
             PermissionStatus.Unknown -> MapPermissionState.Requesting
         }
     }
+
 }
