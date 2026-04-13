@@ -7,12 +7,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.mapsapiapp.core.permissions.AppPermission
 import com.example.mapsapiapp.core.permissions.PermissionContent
 import com.example.mapsapiapp.core.permissions.PermissionStatus
 import com.example.mapsapiapp.core.permissions.rememberPermissionManager
+import com.example.mapsapiapp.ui.layout.MainScaffold
 import com.example.mapsapiapp.ui.map.MapPermissionState
 import com.example.mapsapiapp.viewModel.MapsViewModel
 import com.google.android.gms.maps.model.CameraPosition
@@ -25,6 +32,11 @@ import com.google.maps.android.compose.rememberCameraPositionState
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun MapsScreen(navController: NavController, viewModel: MapsViewModel) {
+
+    var myText by remember { mutableStateOf("") }
+    var latCord by remember {mutableFloatStateOf(20000F)}
+    var longCord by remember {mutableFloatStateOf(20000F)}
+    var myDescription by remember {mutableStateOf("")}
 
     val permissionManager =
         rememberPermissionManager(AppPermission.Location)
@@ -67,19 +79,25 @@ fun MapsScreen(navController: NavController, viewModel: MapsViewModel) {
             position = CameraPosition.fromLatLngZoom(itb, 17f)
         }
 
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(), cameraPositionState = cameraPositionState,
-            onMapClick = {
-                Log.d("MAP CLICKED", it.toString())
-            }, onMapLongClick = {
-                Log.d("MAP CLICKED LONG", it.toString())
-            }){
-            Marker(
-                state = MarkerState(position = itb), title = "ITB",
-                snippet = "Marker at ITB")
+        MainScaffold(navController) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(), cameraPositionState = cameraPositionState,
+                onMapClick = {
+                    Log.d("MAP CLICKED", it.toString())
+                }, onMapLongClick = {
+                    viewModel.addTask(
+                        title = myText,
+                        lat = latCord,
+                        long = longCord,
+                        complete = true,
+                        description = myDescription,
+                    )
+                }){
+                Marker(
+                    state = MarkerState(position = itb), title = "ITB",
+                    snippet = "Marker at ITB")
+            }
         }
-
-
     }
 }
 
